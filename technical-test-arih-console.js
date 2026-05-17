@@ -20,6 +20,12 @@ function formatRupiah(amount) {
 }
 
 function calculateCheckout(cart) {
+  // VALIDASI: Cek apakah cart kosong
+  if (!cart || cart.length === 0) {
+    console.log("Cart kosong. Tidak ada transaksi yang bisa diproses.");
+    return null;
+  }
+
   // LANGKAH 1: Hitung Subtotal
   let subtotal = 0;
   for (const item of cart) {
@@ -60,7 +66,7 @@ async function main() {
     const qty = parseInt(await question("Jumlah (qty): "));
 
     if (isNaN(price) || isNaN(qty) || price <= 0 || qty <= 0) {
-      console.log("⚠️  Harga dan qty harus berupa angka positif. Ulangi input item ini.");
+      console.log("Harga dan qty harus berupa angka positif. Ulangi input item ini.");
       continue;
     }
 
