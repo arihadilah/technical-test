@@ -33,10 +33,13 @@ function calculateCheckout(cart) {
   }
 
   // LANGKAH 2: Hitung Diskon
-  // Rule: jika subtotal > 200.000 → diskon 10%
   let discount = 0;
-  if (subtotal > 200000) {
-    discount = subtotal * 0.1;
+  if (subtotal > 300000) {
+    discount = subtotal * 0.15;
+  } else if (subtotal > 200000) {
+    discount = subtotal * 0.10;
+  } else {
+    discount = 0;
   }
 
   // LANGKAH 3: Tentukan Ongkos Kirim (flat)
@@ -59,8 +62,8 @@ async function main() {
     const itemNumber = cart.length + 1;
     console.log(`\n--- Item ke-${itemNumber} ---`);
 
-    const product = await question("Nama produk (atau ketik 'selesai' untuk berhenti): ");
-    if (product.toLowerCase() === "selesai") break;
+    const product = await question("Nama produk (atau ketik '-' untuk berhenti): ");
+    if (product.toLowerCase() === "-") break;
 
     const price = parseFloat(await question("Harga satuan (Rp): "));
     const qty = parseInt(await question("Jumlah (qty): "));
@@ -96,7 +99,14 @@ async function main() {
   console.log("               RINGKASAN PEMBAYARAN                        ");
   console.log("============================================================");
   console.log(`Subtotal      : ${formatRupiah(result.subtotal)}`);
-  console.log(`Diskon        : - ${formatRupiah(result.discount)}${result.discount === 0 ? "  (subtotal ≤ Rp 200.000)" : "  (10%)"}`);
+  // console.log(`Diskon        : - ${formatRupiah(result.discount)}${result.discount === 0 ? "  (subtotal ≤ Rp 200.000)" : "  (10%)"}`);
+  const discountLabel = result.discount === 0 
+  ? "  (tidak ada diskon)" 
+  : result.subtotal > 300000 
+    ? "  (15%)" 
+    : "  (10%)";
+
+  console.log(`Diskon        : - ${formatRupiah(result.discount)}${discountLabel}`);
   console.log(`Ongkos Kirim  : + ${formatRupiah(result.shippingFee)}`);
   console.log("------------------------------------------------------------");
   console.log(`Grand Total   : ${formatRupiah(result.grandTotal)}`);
